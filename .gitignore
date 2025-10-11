@@ -1,0 +1,28 @@
+# Backend Java
+backend-java/target/
+backend-java/.mvn/
+backend-java/mvnw
+backend-java/mvnw.cmd
+backend-java/*.log
+
+# Frontend React
+frontend-react/node_modules/
+frontend-react/build/
+frontend-react/dist/
+frontend-react/.env.local
+frontend-react/.env.development.local
+frontend-react/.env.test.local
+frontend-react/.env.production.local
+frontend-react/npm-debug.log*
+frontend-react/yarn-debug.log*
+frontend-react/yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
