@@ -79,6 +79,26 @@ public class ContractController {
         }
     }
     
+    @PostMapping("/{contractId}/reprocess")
+    public ResponseEntity<Contract> reprocessContract(@PathVariable String contractId) {
+        try {
+            Contract contract = contractService.reprocessContract(contractId);
+            return ResponseEntity.ok(contract);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    @PutMapping("/{contractId}")
+    public ResponseEntity<Contract> updateContract(@PathVariable String contractId, @RequestBody Contract updatedContract) {
+        try {
+            Contract contract = contractService.updateContract(contractId, updatedContract);
+            return ResponseEntity.ok(contract);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
     @GetMapping("/{contractId}/download")
     public ResponseEntity<Resource> downloadContract(@PathVariable String contractId) {
         Optional<Contract> contractOpt = contractService.getContract(contractId);

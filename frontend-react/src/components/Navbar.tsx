@@ -26,14 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogin, onLogout }) => {
           {user ? (
             <div className="flex items-center gap-4">
               <nav className="hidden md:flex items-center gap-6">
-                <button className="flex items-center gap-2 text-slate-600 hover:text-slate-800">
-                  <Home className="w-4 h-4" />
-                  Dashboard
-                </button>
-                <button className="flex items-center gap-2 text-slate-600 hover:text-slate-800">
-                  <BarChart3 className="w-4 h-4" />
-                  Analytics
-                </button>
+
               </nav>
               
               <div className="flex items-center gap-3 pl-4 border-l border-slate-200">

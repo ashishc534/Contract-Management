@@ -95,6 +95,62 @@ public class ContractService {
         return contractRepository.findById(contractId);
     }
     
+    public Contract reprocessContract(String contractId) throws IOException {
+        Optional<Contract> contractOpt = contractRepository.findById(contractId);
+        if (contractOpt.isEmpty()) {
+            throw new RuntimeException("Contract not found");
+        }
+        
+        Contract contract = contractOpt.get();
+        
+        // Re-extract text from the original file
+        Path filePath = Paths.get(contract.getFilePath());
+        if (!Files.exists(filePath)) {
+            throw new RuntimeException("Original file not found");
+        }
+        
+        // Read file and extract text again
+        byte[] fileBytes = Files.readAllBytes(filePath);
+        String extractedText = extractTextFromDocxBytes(fileBytes);
+        
+        // Re-extract variables
+        ContractVariables variables = extractVariablesWithAI(extractedText);
+        
+        // Update contract
+        contract.setVariables(variables);
+        contract.setExtractionStatus("auto_extracted");
+        contract.setExtractedText(extractedText.length() > 5000 ? extractedText.substring(0, 5000) : extractedText);
+        
+        return contractRepository.save(contract);
+    }
+    
+    public Contract updateContract(String contractId, Contract updatedContract) {
+        Optional<Contract> contractOpt = contractRepository.findById(contractId);
+        if (contractOpt.isEmpty()) {
+            throw new RuntimeException("Contract not found");
+        }
+        
+        Contract contract = contractOpt.get();
+        
+        // Update only the variables and extraction status
+        if (updatedContract.getVariables() != null) {
+            contract.setVariables(updatedContract.getVariables());
+            contract.setExtractionStatus("manually_edited");
+        }
+        
+        return contractRepository.save(contract);
+    }
+    
+    private String extractTextFromDocxBytes(byte[] fileBytes) throws IOException {
+        StringBuilder text = new StringBuilder();
+        try (XWPFDocument document = new XWPFDocument(new java.io.ByteArrayInputStream(fileBytes))) {
+            for (XWPFParagraph paragraph : document.getParagraphs()) {
+                text.append(paragraph.getText()).append("\n");
+            }
+        }
+        return text.toString();
+    }
+    
     private String extractTextFromDocx(MultipartFile file) throws IOException {
         StringBuilder text = new StringBuilder();
         try (XWPFDocument document = new XWPFDocument(file.getInputStream())) {

@@ -74,4 +74,16 @@ export const contractAPI = {
     });
     return response.data;
   },
+
+  // Reprocess contract
+  reprocessContract: async (contractId: string): Promise<Contract> => {
+    const response = await api.post(`/contracts/${contractId}/reprocess`);
+    return response.data;
+  },
+
+  // Update contract
+  updateContract: async (contractId: string, contract: Contract): Promise<Contract> => {
+    const response = await api.put(`/contracts/${contractId}`, contract);
+    return response.data;
+  },
 };
